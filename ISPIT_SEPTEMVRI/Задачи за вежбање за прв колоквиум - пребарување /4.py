@@ -365,14 +365,19 @@ class Squares(Problem):
         return state == self.goal
 
     @staticmethod
-    def check_valid(state):
-        for x, y in state:
-            if x < 0 or x > 4 or y < 0 or y > 4:
-                return False
-        return True
+    def check_valid(x,y):
+        return 0 <= x < 5 and 0 <= y < 5  #promeni vo kodot tuka
 
     def successor(self, state):
         succ = {}
+        actions = {'gore':(0,1),'dolu':(0,-1),'levo':(-1,0),'desno':(1,0)}
+        for i,square in enumerate(state):                  # i ke bide brojot na kvadratceto , square e pozicijata na kvadratceto a so enumerate gi enumerirame od prviot do posledniot
+          for a,d in actions.items():                     # ja zimame akcijata i pozicijata na kvadratceto
+              x,y = square[0]+d[0],square[1]+d[1]
+              if self.check_valid(x,y):
+                    new_state = list(state)                  
+                    new_state[i]=(x,y)
+                    succ[f'Pomesti kvadratche {i + 1} {a}'] = tuple(new_state)
 
         return succ
 
@@ -392,3 +397,6 @@ if __name__ == '__main__':
     goal_state = ((0, 4), (1, 3), (2, 2), (3, 1), (4, 0))
 
     squares = Squares(initial_state, goal_state)
+    solution = breadth_first_graph_search(squares)
+    if solution is not None:
+        print(solution.solution())
